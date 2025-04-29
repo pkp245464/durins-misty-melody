@@ -1,3 +1,8 @@
+# Server configuration
+# TODO : set using api gateway
+server:
+    port: 8081
+
 spring:
     application:
         name: user-service
@@ -18,3 +23,12 @@ spring:
     # properties:
     #   hibernate:
     #     format_sql: true
+
+# Logging configuration
+logging:
+    level:
+        root: INFO
+        org.springframework.security: DEBUG
+        org.hibernate: ERROR
+    pattern:
+        console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36}: %msg%n"

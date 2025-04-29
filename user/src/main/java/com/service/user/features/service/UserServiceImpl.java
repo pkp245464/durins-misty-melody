@@ -1,9 +1,14 @@
 package com.service.user.features.service;
 
 import com.service.user.core.exceptions.GlobalDurinUserServiceException;
+import com.service.user.core.model.UserModel;
 import com.service.user.features.dto.UserDto;
 import com.service.user.features.repository.UserRepository;
+import com.service.user.features.utility.UserServiceMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -24,7 +30,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        return null;
+        log.info("UserServiceImpl::createUser called with input: {}", userDto);
+
+        if (Objects.isNull(userDto) || Objects.isNull(userDto.getEmail()) || userDto.getEmail().isBlank()) {
+            log.error("UserServiceImpl::createUser failed - Email is null or blank.");
+            throw new GlobalDurinUserServiceException("USER-SERVICE: Email must not be null or blank.");
+        }
+
+        boolean isExistByEmail = userRepository.existsByEmailAndIsDeletedFalse(userDto.getEmail());
+        if (isExistByEmail) {
+            log.error("UserServiceImpl::createUser failed - Email '{}' is already registered.", userDto.getEmail());
+            throw new GlobalDurinUserServiceException("USER-SERVICE: Email is already registered with another account.");
+        }
+
+        UserModel userModel = UserServiceMapper.mapDtoToEntity(userDto);
+
+        // TODO: Proper password management (hash password before saving)
+        userModel.setPassword("");
+
+        UserModel savedUser = userRepository.save(userModel);
+        log.info("UserServiceImpl::createUser success - User saved with ID: {}", savedUser.getId());
+
+        UserDto savedUserDto = UserServiceMapper.mapEntityToDto(savedUser);
+        log.info("UserServiceImpl::createUser returning saved user DTO: {}", savedUserDto);
+        return savedUserDto;
     }
 
     @Override
