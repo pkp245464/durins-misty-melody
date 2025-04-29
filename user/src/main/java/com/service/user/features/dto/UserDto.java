@@ -1,8 +1,8 @@
-package com.service.user.dto;
+package com.service.user.features.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.service.user.enums.UserRole;
+import com.service.user.core.enums.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 

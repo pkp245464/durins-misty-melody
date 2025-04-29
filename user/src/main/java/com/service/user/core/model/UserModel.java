@@ -1,6 +1,6 @@
-package com.service.user.model;
+package com.service.user.core.model;
 
-import com.service.user.enums.UserRole;
+import com.service.user.core.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

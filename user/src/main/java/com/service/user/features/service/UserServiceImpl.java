@@ -1,14 +1,21 @@
-package com.service.user.service;
+package com.service.user.features.service;
 
-import com.service.user.dto.UserDto;
+import com.service.user.core.exceptions.GlobalDurinUserServiceException;
+import com.service.user.features.dto.UserDto;
+import com.service.user.features.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
 
     @Override
     public UserDto getUserDetails(String userId) {

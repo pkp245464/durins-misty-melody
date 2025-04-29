@@ -1,6 +1,6 @@
-package com.service.user.service;
+package com.service.user.features.service;
 
-import com.service.user.dto.UserDto;
+import com.service.user.features.dto.UserDto;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
