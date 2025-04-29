@@ -45,9 +45,6 @@ public class UserServiceImpl implements UserService {
 
         UserModel userModel = UserServiceMapper.mapDtoToEntity(userDto);
 
-        // TODO: Proper password management (hash password before saving)
-        userModel.setPassword("");
-
         UserModel savedUser = userRepository.save(userModel);
         log.info("UserServiceImpl::createUser success - User saved with ID: {}", savedUser.getId());
 
