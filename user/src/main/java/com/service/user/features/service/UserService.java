@@ -16,7 +16,7 @@ public interface UserService {
     void changePassword(String userId, String oldPassword, String newPassword);
     UserDto changeUserRole(String userId, String newRole);
     void deleteUser(String userId);
-    UserDto restoreUser(String userId);
+    void restoreUser(String userId);
 
 
     // Methods for searching users by name, email, and role

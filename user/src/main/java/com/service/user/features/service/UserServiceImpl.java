@@ -1,5 +1,6 @@
 package com.service.user.features.service;
 
+import com.password4j.Password;
 import com.service.user.core.exceptions.GlobalDurinUserServiceException;
 import com.service.user.core.model.UserModel;
 import com.service.user.features.dto.UserDto;
@@ -25,7 +26,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserDetails(String userId) {
-        return null;
+        log.info("UserServiceImpl::getUserDetails called with input: {}", userId);
+        UserModel userModel = userRepository.findByIdAndIsDeletedFalse(userId)
+                .orElseThrow(()-> new GlobalDurinUserServiceException("USER-SERVICE: User with ID: " + userId + " does not exist or has been deleted."));
+        log.info("UserServiceImpl::getUserDetails returning user DTO: {}", userModel);
+        return UserServiceMapper.mapEntityToDto(userModel);
     }
 
     @Override
@@ -63,9 +68,37 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    private void validateChangePasswordInput(String userId, String oldPassword, String newPassword) {
+        if (Objects.isNull(userId) || userId.isBlank()) {
+            throw new GlobalDurinUserServiceException("USER-SERVICE: userId must not be null or blank.");
+        }
+        if (Objects.isNull(oldPassword) || oldPassword.isBlank()) {
+            throw new GlobalDurinUserServiceException("USER-SERVICE: oldPassword must not be null or blank.");
+        }
+        if (Objects.isNull(newPassword) || newPassword.isBlank()) {
+            throw new GlobalDurinUserServiceException("USER-SERVICE: newPassword must not be null or blank.");
+        }
+    }
+
     @Override
     public void changePassword(String userId, String oldPassword, String newPassword) {
 
+        validateChangePasswordInput(userId, oldPassword, newPassword);
+
+        UserModel userModel = userRepository.findByIdAndIsDeletedFalse(userId)
+                .orElseThrow(() -> new GlobalDurinUserServiceException("USER-SERVICE: User with ID " + userId + " does not exist or has been deleted."));
+
+        boolean oldPasswordMatches = Password.check(oldPassword, userModel.getPassword()).withArgon2();
+        if(!oldPasswordMatches) {
+            throw new GlobalDurinUserServiceException("USER-SERVICE: Provided oldPassword does not match the password of the user.");
+        }
+        String newHashedPassword = Password.hash(newPassword)
+                .addRandomSalt()
+                .withArgon2()
+                .getResult();
+        userModel.setPassword(newHashedPassword);
+        userRepository.save(userModel);
+        log.info("UserServiceImpl::changePassword success - Password for user with ID: {} has been changed.", userId);
     }
 
     @Override
@@ -75,12 +108,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(String userId) {
-
+        UserModel userModel = userRepository.findByIdAndIsDeletedFalse(userId)
+                .orElseThrow(()-> new GlobalDurinUserServiceException("USER-SERVICE: User with ID: " + userId + " does not exist or has been deleted."));
+        userModel.setIsDeleted(true);
+        userRepository.save(userModel);
+        log.info("UserServiceImpl::deleteUser success - User with ID: {} has been deleted.", userId);
     }
 
     @Override
-    public UserDto restoreUser(String userId) {
-        return null;
+    public void restoreUser(String userId) {
+        UserModel userModel = userRepository.findByIdAndIsDeletedTrue(userId)
+                .orElseThrow(()-> new GlobalDurinUserServiceException("USER-SERVICE: User with ID: " + userId + " does not exist or has not been deleted."));
+        userModel.setIsDeleted(false);
+        userRepository.save(userModel);
+        log.info("UserServiceImpl::restoreUser success - User with ID: {} has been restored.", userId);
     }
 
     @Override
