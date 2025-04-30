@@ -8,9 +8,10 @@ import com.service.user.features.repository.UserRepository;
 import com.service.user.features.utility.UserServiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -171,7 +172,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<UserDto> getUsersPaginated(int pageNumber, int pageSize) {
-        return null;
+        if(pageNumber < 0 || pageSize < 0) {
+            throw new GlobalDurinUserServiceException("USER-SERVICE: Page number and page size must be greater than zero.");
+        }
+        log.info("UserServiceImpl::getUsersPaginated called with input: pageNumber: {}, pageSize: {}", pageNumber, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "createdAt").descending());
+        Page<UserModel> userModelPage = userRepository.findAllActiveUsers(pageable);
+
+        log.info("UserServiceImpl::getUsersPaginated success - Returned {} users", userModelPage.getNumberOfElements());
+        return userModelPage.map(UserServiceMapper::mapEntityToDto);
     }
 
     @Override

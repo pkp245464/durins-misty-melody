@@ -4,6 +4,7 @@ import com.service.user.features.dto.UserDto;
 import com.service.user.features.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,5 +50,15 @@ public class UserController {
         log.info("UserController::restoreUser called for user ID: {}", userId);
         userService.restoreUser(userId);
         return ResponseEntity.ok("User with ID: " + userId + " has been restored successfully.");
+    }
+
+    @GetMapping("/records")
+    public ResponseEntity<Page<UserDto>> getUsersPaginated(@RequestParam(defaultValue = "0") int pageNumber,
+                                                           @RequestParam(defaultValue = "10") int pageSize) {
+
+        log.info("UserController::getUsersPaginated called with pageNumber: {}, pageSize: {}", pageNumber, pageSize);
+        Page<UserDto> userPage = userService.getUsersPaginated(pageNumber, pageSize);
+        log.info("UserController::getUsersPaginated success - Returned {} users", userPage.getNumberOfElements());
+        return ResponseEntity.ok(userPage);
     }
 }
