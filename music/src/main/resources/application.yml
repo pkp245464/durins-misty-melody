@@ -6,3 +6,8 @@ server:
 spring:
   application:
     name: music-service
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/musicservicedb
+      database: musicservicedb
+
