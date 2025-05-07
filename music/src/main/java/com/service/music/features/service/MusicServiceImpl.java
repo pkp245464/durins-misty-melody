@@ -20,7 +20,14 @@ public class MusicServiceImpl implements MusicService {
 
     @Override
     public MusicDto getMusicDetailsById(String id) {
-        return null;
+        log.info("MusicServiceImpl::getMusicDetailsById called with input: {}", id);
+        if(Objects.isNull(id) || id.isBlank()) {
+            log.error("MusicServiceImpl::getMusicDetailsById failed - ID is null or blank.");
+            throw new GlobalDurinMusicServiceException("MusicServiceImpl::getMusicDetailsById failed - ID is null or blank.");
+        }
+        MusicModel musicModel = musicRepository.findById(id)
+                .orElseThrow(()-> new GlobalDurinMusicServiceException("MusicServiceImpl::getMusicDetailsById failed - Music with ID: " + id + " does not exist."));
+        return MusicMapper.mapMusicDetailsModelToDto(musicModel);
     }
 
     @Override
