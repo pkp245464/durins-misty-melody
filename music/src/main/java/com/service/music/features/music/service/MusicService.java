@@ -1,6 +1,6 @@
-package com.service.music.features.service;
+package com.service.music.features.music.service;
 
-import com.service.music.features.dto.MusicDto;
+import com.service.music.features.music.dto.MusicDto;
 
 public interface MusicService {
     MusicDto getMusicDetailsById(String id);

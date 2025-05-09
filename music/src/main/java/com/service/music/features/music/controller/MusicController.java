@@ -1,7 +1,7 @@
-package com.service.music.features.controller;
+package com.service.music.features.music.controller;
 
-import com.service.music.features.dto.MusicDto;
-import com.service.music.features.service.MusicService;
+import com.service.music.features.music.dto.MusicDto;
+import com.service.music.features.music.service.MusicService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

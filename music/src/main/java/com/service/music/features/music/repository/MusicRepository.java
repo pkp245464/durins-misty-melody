@@ -1,4 +1,4 @@
-package com.service.music.features.repository;
+package com.service.music.features.music.repository;
 
 import com.service.music.core.model.MusicModel;
 import org.springframework.data.mongodb.repository.MongoRepository;

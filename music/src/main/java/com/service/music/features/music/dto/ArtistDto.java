@@ -1,4 +1,4 @@
-package com.service.music.features.dto;
+package com.service.music.features.music.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,9 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class StatsDto {
-    @JsonProperty("play_count")
-    private Long playCount;
-    @JsonProperty("likes")
-    private Long likes;
+public class ArtistDto {
+    @JsonProperty("artist_id")
+    private String artistId;
+    @JsonProperty("artist_name")
+    private String artistName;
+    @JsonProperty("artist_country")
+    private String artistCountry;
 }

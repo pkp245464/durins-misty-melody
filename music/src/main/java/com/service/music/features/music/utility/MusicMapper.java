@@ -1,7 +1,7 @@
-package com.service.music.features.utility;
+package com.service.music.features.music.utility;
 
 import com.service.music.core.model.*;
-import com.service.music.features.dto.*;
+import com.service.music.features.music.dto.*;
 
 public class MusicMapper {
 

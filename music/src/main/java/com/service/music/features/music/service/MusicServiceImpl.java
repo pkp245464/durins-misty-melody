@@ -1,10 +1,10 @@
-package com.service.music.features.service;
+package com.service.music.features.music.service;
 
 import com.service.music.core.exceptions.GlobalDurinMusicServiceException;
 import com.service.music.core.model.MusicModel;
-import com.service.music.features.dto.MusicDto;
-import com.service.music.features.repository.MusicRepository;
-import com.service.music.features.utility.MusicMapper;
+import com.service.music.features.music.dto.MusicDto;
+import com.service.music.features.music.repository.MusicRepository;
+import com.service.music.features.music.utility.MusicMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

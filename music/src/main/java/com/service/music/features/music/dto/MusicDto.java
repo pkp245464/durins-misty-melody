@@ -1,4 +1,4 @@
-package com.service.music.features.dto;
+package com.service.music.features.music.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

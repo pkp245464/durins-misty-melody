@@ -1,4 +1,4 @@
-package com.service.music.features.dto;
+package com.service.music.features.music.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,11 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MediaDetailsDto {
-    @JsonProperty("file_url")
-    private String fileUrl;
-    @JsonProperty("cover_image_url")
-    private String coverImageUrl;
-    @JsonProperty("lyrics")
-    private String lyrics;
+public class AlbumDto {
+    @JsonProperty("album_id")
+    private String albumId;
+    @JsonProperty("album_name")
+    private String albumName;
 }
