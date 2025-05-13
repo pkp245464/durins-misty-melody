@@ -1,0 +1,23 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: playlist-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/playlistservicedb
+    username: postgres
+    password: pkp245464
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  # Uncomment below if you want formatted SQL logs
+  # properties:
+  #   hibernate:
+  #     format_sql: true

@@ -15,7 +15,7 @@ import java.util.Objects;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/durin's-misty-melody/file-service")
+@RequestMapping("/durin's-misty-melody/music-service")
 public class FileUploadController {
 
     private final UploadService uploadService;
