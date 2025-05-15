@@ -20,14 +20,14 @@ public class Playlist {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String playlistId;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "playlist_name")
+    private String playlistName;
 
     @Column(name = "user_id")
     private String userId;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "playlist_description")
+    private String playlistDescription;
 
     @Column(name = "cover_image_url")
     private String coverImageUrl;

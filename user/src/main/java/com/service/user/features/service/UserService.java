@@ -49,4 +49,7 @@ public interface UserService {
     List<UserDto> getUsersByRole(String role);
     List<UserDto> getUsersByEmail(String email);
 
+    // Dedicated endpoint to validate user ID existence for inter-service communication
+    Boolean validateUserId(String userId);
+
 }

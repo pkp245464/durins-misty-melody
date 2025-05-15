@@ -1,5 +1,6 @@
 package com.service.playlist.core.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,12 +13,13 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "playlisttrack")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlaylistTrack {
 
     @Id
     @Column(name = "playlisttrack_id")
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String playlisttrackId;
+    private String playlistTrackId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "playlist_id")

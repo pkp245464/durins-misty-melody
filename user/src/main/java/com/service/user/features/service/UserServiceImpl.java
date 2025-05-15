@@ -217,4 +217,12 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getUsersByEmail(String email) {
         return List.of();
     }
+
+    // Dedicated endpoint to validate user ID existence for inter-service communication
+    @Override
+    public Boolean validateUserId(String userId) {
+        UserModel userModel = userRepository.findByIdAndIsDeletedFalse(userId)
+                .orElseThrow(()-> new GlobalDurinUserServiceException("USER-SERVICE: User with ID: " + userId + " does not exist or has not been deleted."));
+        return Boolean.TRUE;
+    }
 }

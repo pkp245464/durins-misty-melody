@@ -28,4 +28,11 @@ public class MusicController {
         log.info("MusicController::registerNewMusic success - Music with ID: {} has been registered.", savedMusicDto.getId());
         return ResponseEntity.ok(savedMusicDto);
     }
+
+    @GetMapping("/validate-music-id/{musicId}")
+    ResponseEntity<Boolean> validateMusicId(@PathVariable String musicId) {
+        log.info("MusicController::validateMusicId called with input: {}", musicId);
+        Boolean isValid = musicService.validateMusicId(musicId);
+        return ResponseEntity.ok(isValid);
+    }
 }

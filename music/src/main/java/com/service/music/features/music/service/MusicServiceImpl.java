@@ -48,4 +48,11 @@ public class MusicServiceImpl implements MusicService {
     public MusicDto updateMusicDetails(MusicDto musicDto) {
         return null;
     }
+
+    @Override
+    public Boolean validateMusicId(String musicId) {
+        MusicModel musicModel = musicRepository.findById(musicId)
+                .orElseThrow(()-> new GlobalDurinMusicServiceException("MusicServiceImpl::getMusicDetailsById failed - Music with ID: " + musicId + " does not exist."));
+        return Boolean.TRUE;
+    }
 }

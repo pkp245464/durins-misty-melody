@@ -61,4 +61,11 @@ public class UserController {
         log.info("UserController::getUsersPaginated success - Returned {} users", userPage.getNumberOfElements());
         return ResponseEntity.ok(userPage);
     }
+
+    @GetMapping("/validate-user-id/{userId}")
+    public ResponseEntity<Boolean> validateUser(@PathVariable String userId) {
+        log.info("UserController::validateUser called with input: {}", userId);
+        Boolean isValid = userService.validateUserId(userId);
+        return ResponseEntity.ok(isValid);
+    }
 }
