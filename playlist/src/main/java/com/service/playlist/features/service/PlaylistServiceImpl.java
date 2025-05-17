@@ -1,17 +1,18 @@
 package com.service.playlist.features.service;
 
+import com.service.playlist.core.config.PlaylistUrlConfig;
 import com.service.playlist.core.exceptions.GlobalDurinPlaylistServiceException;
 import com.service.playlist.core.model.Playlist;
 import com.service.playlist.core.model.PlaylistTrack;
 import com.service.playlist.features.dto.CreatePlaylistRequest;
 import com.service.playlist.features.dto.PlaylistDto;
+import com.service.playlist.features.dto.PlaylistTrackDto;
 import com.service.playlist.features.repository.PlaylistRepository;
 import com.service.playlist.features.repository.PlaylistTrackRepository;
 import com.service.playlist.features.utility.PlaylistMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
@@ -26,9 +27,6 @@ public class PlaylistServiceImpl implements PlaylistService{
     private final PlaylistRepository playlistRepository;
     private final PlaylistTrackRepository playlistTrackRepository;
     private final WebClient webClient;
-
-    private static final String USER_SERVICE_URL = "http://localhost:8081/durin's-misty-melody/user-service";
-    private static final String MUSIC_SERVICE_URL = "http://localhost:8082/durin's-misty-melody/music-service";
 
     @Override
     public PlaylistDto createPlaylist(CreatePlaylistRequest request) {
@@ -78,6 +76,7 @@ public class PlaylistServiceImpl implements PlaylistService{
     }
 
     public void validateMusicIdFromMusicMicroservice(String musicId) {
+        String MUSIC_SERVICE_URL = PlaylistUrlConfig.MUSIC_SERVICE_URL;
         Boolean isUserExists = webClient.get()
                 .uri(MUSIC_SERVICE_URL + "/validate-music-id/{musicId}", musicId)
                 .retrieve()
@@ -91,6 +90,7 @@ public class PlaylistServiceImpl implements PlaylistService{
     }
 
     public void validateUserIdFromUserMicroservice(String userId) {
+        String USER_SERVICE_URL = PlaylistUrlConfig.USER_SERVICE_URL;
         Boolean isUserExists = webClient.get()
                 .uri(USER_SERVICE_URL + "/validate-user-id/{userId}", userId)
                 .retrieve()
@@ -101,5 +101,24 @@ public class PlaylistServiceImpl implements PlaylistService{
             log.error("UserServiceImpl::validateUserIdFromUserMicroservice failed - User with ID: {} does not exist", userId);
             throw new GlobalDurinPlaylistServiceException("USER-SERVICE: User with ID: " + userId + " does not exist");
         }
+    }
+
+    @Override
+    public PlaylistDto getPlaylistById(String id) {
+        log.info("PlaylistServiceImpl::getPlaylistById called with input: {}", id);
+        Playlist playlist = playlistRepository.findById(id)
+                .orElseThrow(() -> new GlobalDurinPlaylistServiceException("Playlist not found with ID: " + id));
+        log.info("PlaylistServiceImpl::getPlaylistById successfully getting playlist with ID: {}", id);
+        return PlaylistMapper.toDto(playlist);
+    }
+
+    @Override
+    public PlaylistTrackDto getPlaylistTrackById(String id) {
+        log.info("PlaylistServiceImpl::getPlaylistTrackById called with id: {}", id);
+
+        PlaylistTrack playlistTrack = playlistTrackRepository.findById(id)
+                .orElseThrow(() -> new GlobalDurinPlaylistServiceException("Playlist track not found with ID: " + id));
+        log.info("PlaylistServiceImpl::getPlaylistTrackById successfully getting playlistTrack with ID: {}", id);
+        return PlaylistMapper.toTrackDto(playlistTrack);
     }
 }
