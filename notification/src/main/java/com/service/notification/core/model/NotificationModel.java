@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "notifications")
-public class Notification {
+public class NotificationModel {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.UUID)
