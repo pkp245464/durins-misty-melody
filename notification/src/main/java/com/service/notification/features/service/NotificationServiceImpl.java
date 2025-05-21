@@ -2,7 +2,9 @@ package com.service.notification.features.service;
 
 import com.service.notification.core.exceptions.GlobalDurinNotificationServiceException;
 import com.service.notification.core.model.NotificationModel;
+import com.service.notification.features.dto.NotificationRequest;
 import com.service.notification.features.repository.NotificationRepository;
+import com.service.notification.features.utility.NotificationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,5 +41,19 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public List<NotificationModel> resendPendingNotificationsFromLast24Hours() {
         return List.of();
+    }
+
+    // Note: user_id and email verification are performed in their respective microservices
+    @Override
+    public Boolean sendNotificationFromMicroservice(NotificationRequest notificationRequest) {
+        if(Objects.isNull(notificationRequest)) {
+            log.error("NotificationServiceImpl::sendNotificationFromMicroservice - Received null request");
+            return false;
+        }
+        log.info("NotificationServiceImpl::sendNotificationFromMicroservice - Processing request for userId: {}", notificationRequest.getUserId());
+        NotificationModel notificationModel = NotificationMapper.toEntity(notificationRequest);
+        notificationRepository.save(notificationModel);
+        log.info("NotificationServiceImpl::sendNotificationFromMicroservice - Notification saved successfully with emailId: {}", notificationModel.getEmailId());
+        return true;
     }
 }

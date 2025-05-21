@@ -5,6 +5,7 @@ import com.service.notification.core.enums.NotificationPriority;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -31,6 +32,7 @@ public class NotificationModel {
     private String message;
 
     @Column(name = "send_date")
+    @CreationTimestamp
     private LocalDateTime sendDate;
 
     @Column(name = "notifications_priority")

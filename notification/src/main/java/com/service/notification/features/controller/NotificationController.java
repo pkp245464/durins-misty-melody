@@ -1,6 +1,7 @@
 package com.service.notification.features.controller;
 
 import com.service.notification.core.model.NotificationModel;
+import com.service.notification.features.dto.NotificationRequest;
 import com.service.notification.features.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,14 @@ public class NotificationController {
         List<NotificationModel> notifications = notificationService.getPendingNotificationsFromLastXHours(hours);
         log.info("NotificationController::getPendingNotifications returning {} notifications for hours: {}", notifications.size(), hours);
         return ResponseEntity.ok(notifications);
+    }
+
+    @PostMapping("/ingest")
+    public ResponseEntity<Boolean> sendNotification(@RequestBody NotificationRequest request) {
+        log.info("NotificationController::sendNotification received request for userId: {}", request.getUserId());
+        Boolean result = notificationService.sendNotificationFromMicroservice(request);
+        log.info("NotificationController::sendNotification notification sent status: {}", result);
+        return ResponseEntity.ok(result);
     }
 
 }
