@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface NotificationService {
     List<NotificationModel> getPendingNotificationsFromLastXHours(Integer hours);
+
+    // Mail Sender
     List<NotificationModel> resendPendingNotificationsFromLast24Hours();
 
     // API used by external microservices to send notifications

@@ -68,4 +68,10 @@ public class UserController {
         Boolean isValid = userService.validateUserId(userId);
         return ResponseEntity.ok(isValid);
     }
+
+    @GetMapping("/userId/{userId}")
+    public String getUserEmailById(@PathVariable String userId) {
+        log.info("UserController::getUserEmailById called with userId: {}", userId);
+        return userService.getEmailByUserId(userId);
+    }
 }

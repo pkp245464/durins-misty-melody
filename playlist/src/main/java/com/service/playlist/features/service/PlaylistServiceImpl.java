@@ -1,14 +1,17 @@
 package com.service.playlist.features.service;
 
 import com.service.playlist.core.config.PlaylistUrlConfig;
+import com.service.playlist.core.enums.NotificationPriority;
 import com.service.playlist.core.exceptions.GlobalDurinPlaylistServiceException;
 import com.service.playlist.core.model.Playlist;
 import com.service.playlist.core.model.PlaylistTrack;
 import com.service.playlist.features.dto.CreatePlaylistRequest;
+import com.service.playlist.features.dto.NotificationRequest;
 import com.service.playlist.features.dto.PlaylistDto;
 import com.service.playlist.features.dto.PlaylistTrackDto;
 import com.service.playlist.features.repository.PlaylistRepository;
 import com.service.playlist.features.repository.PlaylistTrackRepository;
+import com.service.playlist.features.utility.PlaylistCreationHandler;
 import com.service.playlist.features.utility.PlaylistMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +29,8 @@ public class PlaylistServiceImpl implements PlaylistService{
 
     private final PlaylistRepository playlistRepository;
     private final PlaylistTrackRepository playlistTrackRepository;
-    private final WebClient webClient;
+    private final PlaylistCreationHandler playlistCreationHandler;
+
 
     @Override
     public PlaylistDto createPlaylist(CreatePlaylistRequest request) {
@@ -36,7 +40,7 @@ public class PlaylistServiceImpl implements PlaylistService{
             throw new GlobalDurinPlaylistServiceException("PlaylistServiceImpl::createPlaylist failed - CreatePlaylistRequest is null");
         }
 
-        validateUserIdFromUserMicroservice(request.getUserId());
+        playlistCreationHandler.validateUserIdFromUserMicroservice(request.getUserId());
 
         List<String>musicIds = request.getMusicIds();
 
@@ -44,7 +48,7 @@ public class PlaylistServiceImpl implements PlaylistService{
             throw new GlobalDurinPlaylistServiceException("PlaylistServiceImpl::createPlaylist failed - MusicIds is null or empty");
         }
         for (String musicId : musicIds) {
-            validateMusicIdFromMusicMicroservice(musicId);
+            playlistCreationHandler.validateMusicIdFromMusicMicroservice(musicId);
         }
 
         // Map CreatePlaylistRequest to Playlist entity
@@ -72,36 +76,13 @@ public class PlaylistServiceImpl implements PlaylistService{
         PlaylistDto resultDto = PlaylistMapper.toDto(savedPlaylist);
         log.info("PlaylistServiceImpl::createPlaylist successfully created playlist with ID: {}", resultDto.getPlaylistId());
 
+        Integer noOfMusicInPlaylist = musicIds.size();
+
+        playlistCreationHandler.dispatchPlaylistCreationNotificationMicroservices(request.getUserId(), request.getPlaylistName(), noOfMusicInPlaylist);
+
         return resultDto;
     }
 
-    public void validateMusicIdFromMusicMicroservice(String musicId) {
-        String MUSIC_SERVICE_URL = PlaylistUrlConfig.MUSIC_SERVICE_URL;
-        Boolean isUserExists = webClient.get()
-                .uri(MUSIC_SERVICE_URL + "/validate-music-id/{musicId}", musicId)
-                .retrieve()
-                .bodyToMono(Boolean.class)
-                .block();
-
-        if (Boolean.FALSE.equals(isUserExists)) {
-            log.error("UserServiceImpl::validateMusicIdFromMusicMicroservice failed - Music with ID: {} does not exist", musicId);
-            throw new GlobalDurinPlaylistServiceException("MUSIC-SERVICE: Music with ID: " + musicId + " does not exist");
-        }
-    }
-
-    public void validateUserIdFromUserMicroservice(String userId) {
-        String USER_SERVICE_URL = PlaylistUrlConfig.USER_SERVICE_URL;
-        Boolean isUserExists = webClient.get()
-                .uri(USER_SERVICE_URL + "/validate-user-id/{userId}", userId)
-                .retrieve()
-                .bodyToMono(Boolean.class)
-                .block();
-
-        if(Boolean.FALSE.equals(isUserExists)) {
-            log.error("UserServiceImpl::validateUserIdFromUserMicroservice failed - User with ID: {} does not exist", userId);
-            throw new GlobalDurinPlaylistServiceException("USER-SERVICE: User with ID: " + userId + " does not exist");
-        }
-    }
 
     @Override
     public PlaylistDto getPlaylistById(String id) {

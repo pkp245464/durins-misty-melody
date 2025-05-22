@@ -52,4 +52,12 @@ public interface UserService {
     // Dedicated endpoint to validate user ID existence for inter-service communication
     Boolean validateUserId(String userId);
 
+    /**
+     * Retrieves the email address associated with the given user ID.
+     * This method is primarily used for inter-service communication to fetch user email information.
+     *
+     * @param userId the unique identifier of the user
+     * @return the email address of the specified user
+     */
+    String getEmailByUserId(String userId);
 }

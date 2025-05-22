@@ -225,4 +225,13 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(()-> new GlobalDurinUserServiceException("USER-SERVICE: User with ID: " + userId + " does not exist or has not been deleted."));
         return Boolean.TRUE;
     }
+
+    @Override
+    public String getEmailByUserId(String userId) {
+        log.info("UserServiceImpl::getUserEmailById called with userId: {}", userId);
+        UserModel userModel = userRepository.findByIdAndIsDeletedFalse(userId)
+                .orElseThrow(() -> new GlobalDurinUserServiceException("USER-SERVICE: User with ID: " + userId + " does not exist or has been deleted."));
+        log.info("UserServiceImpl::getUserEmailById returning email: {}", userModel.getEmail());
+        return userModel.getEmail();
+    }
 }
