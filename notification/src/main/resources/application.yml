@@ -21,3 +21,9 @@ spring:
   # properties:
   #   hibernate:
   #     format_sql: true
+
+aws:
+  ses:
+    access-key: ${ACCESS_KEY}
+    secret-key: ${SECRET_KEY}
+    region: us-east-1

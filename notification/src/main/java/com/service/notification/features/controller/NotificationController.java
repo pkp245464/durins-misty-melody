@@ -2,6 +2,7 @@ package com.service.notification.features.controller;
 
 import com.service.notification.core.model.NotificationModel;
 import com.service.notification.features.dto.NotificationRequest;
+import com.service.notification.features.dto.ResendNotificationResponse;
 import com.service.notification.features.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,4 +35,12 @@ public class NotificationController {
         return ResponseEntity.ok(result);
     }
 
+    @PostMapping("/send-pending")
+    public ResponseEntity<ResendNotificationResponse> resendPendingEmails() {
+        log.info("NotificationController::resendPendingEmails - Received request to resend pending emails");
+        ResendNotificationResponse result = notificationService.resendPendingNotificationsFromLast24Hours();
+        log.info("NotificationController::resendPendingEmails - Resend completed: total={}, sent={}, failed={}",
+                result.getTotalNotifications(), result.getTotalSent(), result.getTotalFailed());
+        return ResponseEntity.ok(result);
+    }
 }

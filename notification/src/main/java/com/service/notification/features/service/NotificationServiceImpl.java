@@ -1,15 +1,20 @@
 package com.service.notification.features.service;
 
+import com.service.notification.core.enums.DeliveryStatus;
 import com.service.notification.core.exceptions.GlobalDurinNotificationServiceException;
 import com.service.notification.core.model.NotificationModel;
 import com.service.notification.features.dto.NotificationRequest;
+import com.service.notification.features.dto.ResendNotificationResponse;
 import com.service.notification.features.repository.NotificationRepository;
 import com.service.notification.features.utility.NotificationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,6 +22,8 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
+
+    private final MailSender mailSender;
 
     private final NotificationRepository notificationRepository;
 
@@ -39,8 +46,48 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<NotificationModel> resendPendingNotificationsFromLast24Hours() {
-        return List.of();
+    public ResendNotificationResponse resendPendingNotificationsFromLast24Hours() {
+        LocalDateTime fromTime = LocalDateTime.now().minusHours(24);
+        log.info("NotificationServiceImpl::resendPendingNotificationsFromLast24Hours - Fetching pending notifications since: {}", fromTime);
+
+        List<NotificationModel> pendingNotifications = notificationRepository.findPendingNotificationsSince(fromTime);
+        log.info("NotificationServiceImpl::resendPendingNotificationsFromLast24Hours - Found {} pending notifications", pendingNotifications.size());
+
+        List<String> sent = new ArrayList<>();
+        List<String> failed = new ArrayList<>();
+
+        for (NotificationModel notification : pendingNotifications) {
+            try {
+                SimpleMailMessage msg = new SimpleMailMessage();
+                msg.setFrom("pankajkumar245464@gmail.com");
+                msg.setTo(notification.getEmailId());
+                msg.setSubject(notification.getSubject());
+                msg.setText(notification.getMessage());
+
+                mailSender.send(msg);
+                notification.setDeliveryStatus(DeliveryStatus.SENT);
+                sent.add(notification.getEmailId());
+                log.info("NotificationServiceImpl::resendPendingNotificationsFromLast24Hours - Email sent to {}", notification.getEmailId());
+            }
+            catch (Exception e) {
+                notification.setDeliveryStatus(DeliveryStatus.FAILED);
+                failed.add(notification.getEmailId());
+                log.error("NotificationServiceImpl::resendPendingNotificationsFromLast24Hours - Failed to send email to {}: {}", notification.getEmailId(), e.getMessage());
+            }
+        }
+
+        notificationRepository.saveAll(pendingNotifications);
+
+        log.info("NotificationServiceImpl::resendPendingNotificationsFromLast24Hours - Resend summary: total={}, sent={}, failed={}",
+                pendingNotifications.size(), sent.size(), failed.size());
+
+        return ResendNotificationResponse.builder()
+                .totalNotifications(pendingNotifications.size())
+                .totalSent(sent.size())
+                .totalFailed(failed.size())
+                .sentTo(sent)
+                .failedTo(failed)
+                .build();
     }
 
     // Note: user_id and email verification are performed in their respective microservices
