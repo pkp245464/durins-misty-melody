@@ -1,0 +1,9 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: analytics-service
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/durins_analytics_db
+      database: durins_analytics_db
