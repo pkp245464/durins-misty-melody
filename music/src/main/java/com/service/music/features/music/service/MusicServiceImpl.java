@@ -1,5 +1,6 @@
 package com.service.music.features.music.service;
 
+import com.service.music.core.config.MusicUrlConfig;
 import com.service.music.core.exceptions.GlobalDurinMusicServiceException;
 import com.service.music.core.model.MusicModel;
 import com.service.music.features.music.dto.MusicDto;
@@ -8,6 +9,7 @@ import com.service.music.features.music.utility.MusicMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Objects;
 
@@ -17,17 +19,33 @@ import java.util.Objects;
 public class MusicServiceImpl implements MusicService {
 
     private final MusicRepository musicRepository;
+    private final WebClient webClient;
 
     @Override
-    public MusicDto getMusicDetailsById(String id) {
-        log.info("MusicServiceImpl::getMusicDetailsById called with input: {}", id);
-        if(Objects.isNull(id) || id.isBlank()) {
+    public MusicDto getMusicDetailsById(String musicId) {
+        log.info("MusicServiceImpl::getMusicDetailsById called with input: {}", musicId);
+        if(Objects.isNull(musicId) || musicId.isBlank()) {
             log.error("MusicServiceImpl::getMusicDetailsById failed - ID is null or blank.");
             throw new GlobalDurinMusicServiceException("MusicServiceImpl::getMusicDetailsById failed - ID is null or blank.");
         }
-        MusicModel musicModel = musicRepository.findById(id)
-                .orElseThrow(()-> new GlobalDurinMusicServiceException("MusicServiceImpl::getMusicDetailsById failed - Music with ID: " + id + " does not exist."));
+        MusicModel musicModel = musicRepository.findById(musicId)
+                .orElseThrow(()-> new GlobalDurinMusicServiceException("MusicServiceImpl::getMusicDetailsById failed - Music with ID: " + musicId + " does not exist."));
+        recordMusicPlayEvent(musicId);
         return MusicMapper.mapMusicDetailsModelToDto(musicModel);
+    }
+
+    public void recordMusicPlayEvent(String musicId) {
+        String ANALYTICS_SERVICE_URL = MusicUrlConfig.ANALYTICS_SERVICE_URL;
+        Boolean result = webClient.get()
+                .uri(ANALYTICS_SERVICE_URL + "/record/{musicId}", musicId)
+                .retrieve()
+                .bodyToMono(Boolean.class)
+                .block();
+
+        if (Boolean.FALSE.equals(result)) {
+            log.error("MusicServiceImpl::recordPlayAnalytics - Failed to call analytics service for musicId: {}", musicId);
+            throw new GlobalDurinMusicServiceException("MusicServiceImpl::recordPlayAnalytics - Failed to call analytics service for musicId: " + musicId);
+        }
     }
 
     @Override
