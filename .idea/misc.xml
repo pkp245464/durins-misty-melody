@@ -10,6 +10,7 @@
         <option value="$PROJECT_DIR$/playlist/pom.xml" />
         <option value="$PROJECT_DIR$/notification/pom.xml" />
         <option value="$PROJECT_DIR$/analytics/pom.xml" />
+        <option value="$PROJECT_DIR$/search/pom.xml" />
       </list>
     </option>
   </component>
