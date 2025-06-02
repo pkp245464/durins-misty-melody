@@ -27,3 +27,13 @@ spring:
           uri: http://localhost:8084
           predicates:
             - Path=/durin's-misty-melody/notification-service/**
+
+        - id: analytics-service
+          uri: http://localhost:8085
+          predicates:
+              - Path=/durin's-misty-melody/analytics-service/**
+
+        - id: search-service
+          uri: http://localhost:8086
+          predicates:
+              - Path=/durin's-misty-melody/search-service/**
