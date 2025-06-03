@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -127,7 +128,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> searchUsersByName(String name) {
-        return List.of();
+        if (Objects.isNull(name) || name.isBlank()) {
+            log.error("UserServiceImpl::searchUsersByName failed - Search keyword cannot be null or blank.");
+            throw new GlobalDurinUserServiceException("UserServiceImpl:: Search keyword cannot be null or blank.");
+        }
+
+        List<UserModel> models = userRepository.findByNameContainingIgnoreCaseAndIsDeletedFalse(name);
+
+        List<UserDto> result = models.stream()
+                .filter(UserModel::getIsActive)
+                .map(UserServiceMapper::mapEntityToDto)
+                .collect(Collectors.toList());
+
+        log.info("UserServiceImpl::searchUsersByName returning {} users", result.size());
+        return result;
     }
 
     @Override

@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -73,5 +75,13 @@ public class UserController {
     public String getUserEmailById(@PathVariable String userId) {
         log.info("UserController::getUserEmailById called with userId: {}", userId);
         return userService.getEmailByUserId(userId);
+    }
+
+    @GetMapping("/search")
+    public List<UserDto> searchUsers(@RequestParam("keyword") String keyword) {
+        log.info("UserController::searchUsers called with keyword: {}", keyword);
+        List<UserDto> userDtoList = userService.searchUsersByName(keyword);
+        log.info("UserController::searchUsers returning {} users", userDtoList.size());
+        return userDtoList;
     }
 }

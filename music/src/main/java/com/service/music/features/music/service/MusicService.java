@@ -1,6 +1,9 @@
 package com.service.music.features.music.service;
 
 import com.service.music.features.music.dto.MusicDto;
+import com.service.music.features.music.dto.MusicSearchDto;
+
+import java.util.List;
 
 public interface MusicService {
     MusicDto getMusicDetailsById(String id);
@@ -9,4 +12,5 @@ public interface MusicService {
 
     // Dedicated endpoint to validate user ID existence for inter-service communication
     Boolean validateMusicId(String musicId);
+    List<MusicSearchDto> searchMusicByKeyword(String keyword);
 }

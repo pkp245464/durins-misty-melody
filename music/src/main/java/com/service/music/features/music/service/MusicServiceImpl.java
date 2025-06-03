@@ -4,6 +4,7 @@ import com.service.music.core.config.MusicUrlConfig;
 import com.service.music.core.exceptions.GlobalDurinMusicServiceException;
 import com.service.music.core.model.MusicModel;
 import com.service.music.features.music.dto.MusicDto;
+import com.service.music.features.music.dto.MusicSearchDto;
 import com.service.music.features.music.repository.MusicRepository;
 import com.service.music.features.music.utility.MusicMapper;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -72,5 +75,27 @@ public class MusicServiceImpl implements MusicService {
         MusicModel musicModel = musicRepository.findById(musicId)
                 .orElseThrow(()-> new GlobalDurinMusicServiceException("MusicServiceImpl::getMusicDetailsById failed - Music with ID: " + musicId + " does not exist."));
         return Boolean.TRUE;
+    }
+
+    @Override
+    public List<MusicSearchDto> searchMusicByKeyword(String keyword) {
+        log.info("MusicServiceImpl::searchMusicByKeyword called with keyword: {}", keyword);
+        if (Objects.isNull(keyword) || keyword.isBlank()) {
+            log.error("MusicServiceImpl::searchMusicByKeyword failed - keyword cannot be null or blank.");
+            throw new GlobalDurinMusicServiceException(
+                    "MusicServiceImpl::searchMusicByKeyword failed - keyword cannot be null or blank."
+            );
+        }
+
+        List<MusicModel> models = musicRepository.searchByKeyword(keyword.trim());
+        log.info("MusicServiceImpl::searchMusicByKeyword found {} matches", models.size());
+
+        List<MusicSearchDto> result = models.stream()
+                .filter(Objects::nonNull)
+                .map(MusicMapper::toSearchDto)
+                .collect(Collectors.toList());
+
+        log.info("MusicServiceImpl::searchMusicByKeyword returning {} results", result.size());
+        return result;
     }
 }

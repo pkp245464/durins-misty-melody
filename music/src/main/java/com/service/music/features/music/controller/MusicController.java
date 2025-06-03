@@ -1,11 +1,14 @@
 package com.service.music.features.music.controller;
 
 import com.service.music.features.music.dto.MusicDto;
+import com.service.music.features.music.dto.MusicSearchDto;
 import com.service.music.features.music.service.MusicService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -34,5 +37,13 @@ public class MusicController {
         log.info("MusicController::validateMusicId called with input: {}", musicId);
         Boolean isValid = musicService.validateMusicId(musicId);
         return ResponseEntity.ok(isValid);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<MusicSearchDto>> searchMusic(@RequestParam("keyword") String keyword) {
+        log.info("MusicController::searchMusic called with keyword: {}", keyword);
+        List<MusicSearchDto> dtos = musicService.searchMusicByKeyword(keyword);
+        log.info("MusicController::searchMusic returning {} results", dtos.size());
+        return ResponseEntity.ok(dtos);
     }
 }

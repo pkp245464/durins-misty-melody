@@ -3,6 +3,8 @@ package com.service.music.features.music.utility;
 import com.service.music.core.model.*;
 import com.service.music.features.music.dto.*;
 
+import java.util.Objects;
+
 public class MusicMapper {
 
     public static MusicModel mapMusicDetailsDtoToModel(MusicDto musicDto) {
@@ -78,5 +80,18 @@ public class MusicMapper {
 
     private static StatsDto toDto(Stats stats) {
         return stats != null ? new StatsDto(stats.getPlayCount(), stats.getLikes()) : null;
+    }
+
+    public static MusicSearchDto toSearchDto(MusicModel model) {
+        if (Objects.isNull(model)) {
+            return null;
+        }
+        return MusicSearchDto.builder()
+                .id(model.getId())
+                .title(model.getTitle())
+                .artistName(model.getArtist() != null ? model.getArtist().getArtistName() : null)
+                .tags(model.getTags())
+                .albumName(model.getAlbum() != null ? model.getAlbum().getAlbumName() : null)
+                .build();
     }
 }
