@@ -1,6 +1,7 @@
 package com.service.user.features.service;
 
 import com.service.user.features.dto.UserDto;
+import com.service.user.features.dto.UserSearchResponseDto;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public interface UserService {
 
 
     // Methods for searching users by name, email, and role
-    List<UserDto> searchUsersByName(String name);
+    List<UserSearchResponseDto> searchUsersByName(String keyword);
     List<UserDto> searchUsersByEmail(String email);
     List<UserDto> searchUsersByRole(String role);
 

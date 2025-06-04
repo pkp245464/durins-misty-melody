@@ -4,6 +4,7 @@ import com.password4j.Password;
 import com.service.user.core.exceptions.GlobalDurinUserServiceException;
 import com.service.user.core.model.UserModel;
 import com.service.user.features.dto.UserDto;
+import com.service.user.features.dto.UserSearchResponseDto;
 import com.service.user.features.repository.UserRepository;
 import com.service.user.features.utility.UserServiceMapper;
 import lombok.RequiredArgsConstructor;
@@ -127,17 +128,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> searchUsersByName(String name) {
-        if (Objects.isNull(name) || name.isBlank()) {
+    public List<UserSearchResponseDto> searchUsersByName(String keyword) {
+        if (Objects.isNull(keyword) || keyword.isBlank()) {
             log.error("UserServiceImpl::searchUsersByName failed - Search keyword cannot be null or blank.");
             throw new GlobalDurinUserServiceException("UserServiceImpl:: Search keyword cannot be null or blank.");
         }
 
-        List<UserModel> models = userRepository.findByNameContainingIgnoreCaseAndIsDeletedFalse(name);
+        List<UserModel> models = userRepository.findByNameContainingIgnoreCaseAndIsDeletedFalse(keyword);
 
-        List<UserDto> result = models.stream()
+        List<UserSearchResponseDto> result = models.stream()
                 .filter(UserModel::getIsActive)
-                .map(UserServiceMapper::mapEntityToDto)
+                .map(UserServiceMapper::mapEntityToSearchResponseDto)
                 .collect(Collectors.toList());
 
         log.info("UserServiceImpl::searchUsersByName returning {} users", result.size());

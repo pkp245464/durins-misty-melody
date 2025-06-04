@@ -1,6 +1,7 @@
 package com.service.user.features.controller;
 
 import com.service.user.features.dto.UserDto;
+import com.service.user.features.dto.UserSearchResponseDto;
 import com.service.user.features.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,10 +79,10 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public List<UserDto> searchUsers(@RequestParam("keyword") String keyword) {
+    public List<UserSearchResponseDto> searchUsers(@RequestParam("keyword") String keyword) {
         log.info("UserController::searchUsers called with keyword: {}", keyword);
-        List<UserDto> userDtoList = userService.searchUsersByName(keyword);
-        log.info("UserController::searchUsers returning {} users", userDtoList.size());
-        return userDtoList;
+        List<UserSearchResponseDto> userSearchResponseDtos = userService.searchUsersByName(keyword);
+        log.info("UserController::searchUsers returning {} users", userSearchResponseDtos.size());
+        return userSearchResponseDtos;
     }
 }

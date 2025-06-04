@@ -5,6 +5,7 @@ import com.password4j.Password;
 import com.service.user.core.exceptions.GlobalDurinUserServiceException;
 import com.service.user.core.model.UserModel;
 import com.service.user.features.dto.UserDto;
+import com.service.user.features.dto.UserSearchResponseDto;
 
 import java.util.Objects;
 
@@ -62,4 +63,19 @@ public class UserServiceMapper {
         dto.setIsDeleted(entity.getIsDeleted());
         return dto;
     }
+
+    public static UserSearchResponseDto mapEntityToSearchResponseDto(UserModel entity) {
+        if (Objects.isNull(entity)) {
+            throw new GlobalDurinUserServiceException("UserServiceMapper: Provided UserModel is null.");
+        }
+
+        return UserSearchResponseDto.builder()
+                .userId(entity.getId())
+                .firstName(entity.getFirstName())
+                .lastName(entity.getLastName())
+                .isActive(entity.getIsActive())
+                .profileImageUrl(entity.getProfilePictureUrl())
+                .build();
+    }
+
 }

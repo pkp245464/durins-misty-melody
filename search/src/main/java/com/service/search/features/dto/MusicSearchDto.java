@@ -4,13 +4,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
-public class MusicSearchDTO {
-    private String musicId;
+public class MusicSearchDto {
+    private String id;
     private String title;
     private String artistName;
-    private String genre;
-    private String musicUrl;
+    private List<String> tags;
+    private String albumName;
 }
