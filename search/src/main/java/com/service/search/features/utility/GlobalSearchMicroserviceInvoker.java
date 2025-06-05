@@ -1,6 +1,7 @@
 package com.service.search.features.utility;
 
 import com.service.search.core.config.SearchUrlConfig;
+import com.service.search.core.exceptions.GlobalDurinSearchServiceException;
 import com.service.search.features.dto.MusicSearchDto;
 import com.service.search.features.dto.UserSearchDto;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class GlobalSearchMicroserviceInvoker {
 
         if (Objects.isNull(users) || users.isEmpty()) {
             log.error("GlobalSearchMicroserviceInvoker::searchUsersFromUserMicroservice - No users found for keyword: {}", keyword);
-            throw new RuntimeException("USER-SERVICE: No users found for keyword: " + keyword);
+            throw new GlobalDurinSearchServiceException("USER-SERVICE: No users found for keyword: " + keyword);
         }
         log.info("GlobalSearchMicroserviceInvoker::searchUsersFromUserMicroservice - Found {} users for keyword: {}", users.size(), keyword);
         return users;
@@ -51,7 +52,7 @@ public class GlobalSearchMicroserviceInvoker {
 
         if (Objects.isNull(musicList) || musicList.isEmpty()) {
             log.error("No music found for keyword: {}", keyword);
-            throw new RuntimeException("MUSIC-SERVICE: No music found for keyword: " + keyword);
+            throw new GlobalDurinSearchServiceException("MUSIC-SERVICE: No music found for keyword: " + keyword);
         }
 
         log.info("Found {} music results for keyword: {}", musicList.size(), keyword);

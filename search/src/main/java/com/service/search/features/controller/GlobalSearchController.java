@@ -19,5 +19,11 @@ public class GlobalSearchController {
 
     private final GlobalSearchService globalSearchService;
 
-
+    @GetMapping("/global-search")
+    public ResponseEntity<GlobalSearchResponseDto> search(@RequestParam("keyword") String keyword) {
+        log.info("GlobalSearchController::search called with keyword: {}", keyword);
+        GlobalSearchResponseDto response = globalSearchService.performGlobalSearch(keyword);
+        log.info("GlobalSearchController::search - Successfully retrieved search results for keyword: {}", keyword);
+        return ResponseEntity.ok(response);
+    }
 }
