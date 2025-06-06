@@ -18,7 +18,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="gateway" />
       </profile>
-      <profile name="Annotation profile for search" enabled="true">
+      <profile name="Annotation profile for streaming" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -27,6 +27,7 @@
         </processorPath>
         <module name="analytics" />
         <module name="notification" />
+        <module name="streaming" />
         <module name="search" />
         <module name="music" />
         <module name="playlist" />
@@ -41,6 +42,7 @@
       <module name="notification" options="-parameters" />
       <module name="playlist" options="-parameters" />
       <module name="search" options="-parameters" />
+      <module name="streaming" options="-parameters" />
       <module name="user" options="-parameters" />
     </option>
   </component>
