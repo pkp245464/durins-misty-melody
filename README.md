@@ -22,7 +22,5 @@ An AI-powered Music Streaming Microservices Backend inspired by the richness of 
 
 ---
 
-![5961303d-8488-47a3-9453-70923a340520](https://github.com/user-attachments/assets/a0cfeb21-6a5d-4316-a04d-ed9de754b2fd)
-
 
 
