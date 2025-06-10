@@ -3,3 +3,14 @@ server:
 spring:
   application:
     name: streaming-service
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/durins_streaming_db
+      database: durins_streaming_db
+
+
+aws:
+  accessKey: ${ACCESS_KEY}
+  secretKey: ${SECRET_KEY}
+  bucket:
+    name: ${BUCKET_NAME}

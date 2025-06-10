@@ -46,4 +46,11 @@ public class MusicController {
         log.info("MusicController::searchMusic returning {} results", dtos.size());
         return ResponseEntity.ok(dtos);
     }
+
+    @GetMapping("/get-file-url/{musicId}")
+    public ResponseEntity<String> getFileUrl(@PathVariable String musicId) {
+        log.info("MusicController::getFileUrl called for ID: {}", musicId);
+        String fileUrl = musicService.getMusicFileUrlById(musicId);
+        return ResponseEntity.ok(fileUrl);
+    }
 }

@@ -12,6 +12,8 @@
         <option value="$PROJECT_DIR$/analytics/pom.xml" />
         <option value="$PROJECT_DIR$/search/pom.xml" />
         <option value="$PROJECT_DIR$/streaming/pom.xml" />
+        <option value="$PROJECT_DIR$/ai/pom.xml" />
+        <option value="$PROJECT_DIR$/recommendation/pom.xml" />
       </list>
     </option>
   </component>

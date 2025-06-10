@@ -13,4 +13,8 @@ public interface MusicService {
     // Dedicated endpoint to validate user ID existence for inter-service communication
     Boolean validateMusicId(String musicId);
     List<MusicSearchDto> searchMusicByKeyword(String keyword);
+
+    //Dedicate for other microservices
+    String getMusicFileUrlById(String musicId);
+
 }

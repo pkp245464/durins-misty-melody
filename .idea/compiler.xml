@@ -18,6 +18,16 @@
         <outputRelativeToContentRoot value="true" />
         <module name="gateway" />
       </profile>
+      <profile name="Annotation profile for notification" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+        </processorPath>
+        <module name="notification" />
+      </profile>
       <profile name="Annotation profile for streaming" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -26,21 +36,26 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
         <module name="analytics" />
-        <module name="notification" />
+        <module name="recommendation" />
         <module name="streaming" />
         <module name="search" />
         <module name="music" />
         <module name="playlist" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ai" target="21" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ai" options="-parameters" />
       <module name="analytics" options="-parameters" />
       <module name="gateway" options="-parameters" />
       <module name="music" options="-parameters" />
       <module name="notification" options="-parameters" />
       <module name="playlist" options="-parameters" />
+      <module name="recommendation" options="-parameters" />
       <module name="search" options="-parameters" />
       <module name="streaming" options="-parameters" />
       <module name="user" options="-parameters" />

@@ -98,4 +98,15 @@ public class MusicServiceImpl implements MusicService {
         log.info("MusicServiceImpl::searchMusicByKeyword returning {} results", result.size());
         return result;
     }
+
+    @Override
+    public String getMusicFileUrlById(String musicId) {
+        log.info("MusicServiceImpl::getMusicFileUrlById called with ID: {}", musicId);
+        if (Objects.isNull(musicId) || musicId.isBlank()) {
+            throw new GlobalDurinMusicServiceException("Music ID is null or blank.");
+        }
+        MusicModel musicModel = musicRepository.findById(musicId)
+                .orElseThrow(() -> new GlobalDurinMusicServiceException("Music with ID " + musicId + " does not exist."));
+        return musicModel.getMediaDetails().getFileUrl();
+    }
 }
