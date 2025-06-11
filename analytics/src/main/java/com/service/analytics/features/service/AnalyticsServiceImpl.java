@@ -26,12 +26,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             log.error("AnalyticsServiceImpl::recordPlayEvent failed - musicId is null or blank. {}", musicId);
             throw new GlobalDurinAnalyticsServiceException("AnalyticsServiceImpl::recordPlayEvent failed - musicId is null or blank. " + musicId);
         }
-        updateOrCreateMusicEvent(musicId);
+        recordMusicPlayStats(musicId);
         log.info("AnalyticsServiceImpl::recordPlayEvent completed successfully for musicId: {}", musicId);
         return Boolean.TRUE;
     }
 
-    private void updateOrCreateMusicEvent(String musicId) {
+    private void recordMusicPlayStats(String musicId) {
         log.info("AnalyticsServiceImpl::updateOrCreateMusicEvent - Attempting to find existing event for musicId: {}", musicId);
         MusicEvent musicEvent = analyticsRepository.findByMusicId(musicId)
                 .orElse(MusicEvent.builder()
