@@ -5,12 +5,14 @@ import com.service.analytics.core.model.MusicEvent;
 import com.service.analytics.features.repository.AnalyticsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -18,6 +20,28 @@ import java.util.Objects;
 public class AnalyticsServiceImpl implements AnalyticsService {
 
     private final AnalyticsRepository analyticsRepository;
+
+    @Override
+    public List<String> getAllTimeMostPlayedSongs(Integer limit) {
+        log.info("AnalyticsServiceImpl::getAllTimeMostPlayedSongs called with limit: {}", limit);
+        List<MusicEvent> events = analyticsRepository.findAll(Sort.by(Sort.Direction.DESC, "playCount"));
+        List<String> result = events.stream()
+                .limit(limit)
+                .map(MusicEvent::getMusicId)
+                .collect(Collectors.toList());
+        log.info("AnalyticsServiceImpl::getAllTimeMostPlayedSongs success with limit: {}", limit);
+        return result;
+    }
+
+    @Override
+    public List<String> getTodayMostPlayedSongs(Integer limit) {
+        return List.of();
+    }
+
+    @Override
+    public List<String> getTrendingSongs(Integer limit) {
+        return List.of();
+    }
 
     @Override
     public Boolean recordPlayEvent(String musicId) {
