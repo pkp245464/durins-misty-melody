@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +36,52 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
     @Override
     public List<String> getTodayMostPlayedSongs(Integer limit) {
-        return List.of();
+        log.info("AnalyticsServiceImpl::getTodayMostPlayedSongs called with limit: {}", limit);
+        LocalDate today = LocalDate.now();
+        List<MusicEvent> events = analyticsRepository.findAll();
+
+        List<String> result = events.stream()
+                .filter(event -> event.getPlayTimestamps() != null)
+                .sorted((a, b) -> {
+                    long aCount = a.getPlayTimestamps().stream()
+                            .filter(timestamp -> timestamp.toLocalDate().equals(today))
+                            .count();
+                    long bCount = b.getPlayTimestamps().stream()
+                            .filter(timestamp -> timestamp.toLocalDate().equals(today))
+                            .count();
+                    return Long.compare(bCount, aCount);
+                })
+                .limit(limit)
+                .map(MusicEvent::getMusicId)
+                .collect(Collectors.toList());
+
+        log.info("AnalyticsServiceImpl::getTodayMostPlayedSongs success with limit: {}", limit);
+        return result;
     }
 
     @Override
     public List<String> getTrendingSongs(Integer limit) {
-        return List.of();
+        log.info("AnalyticsServiceImpl::getTrendingSongs called with limit: {}", limit);
+        LocalDate weekStart = LocalDate.now().minusDays(7);
+        List<MusicEvent> events = analyticsRepository.findAll();
+
+        List<String> result = events.stream()
+                .filter(event -> event.getPlayTimestamps() != null)
+                .sorted((a, b) -> {
+                    long aCount = a.getPlayTimestamps().stream()
+                            .filter(timestamp -> timestamp.toLocalDate().isAfter(weekStart))
+                            .count();
+                    long bCount = b.getPlayTimestamps().stream()
+                            .filter(timestamp -> timestamp.toLocalDate().isAfter(weekStart))
+                            .count();
+                    return Long.compare(bCount, aCount);
+                })
+                .limit(limit)
+                .map(MusicEvent::getMusicId)
+                .collect(Collectors.toList());
+
+        log.info("AnalyticsServiceImpl::getTrendingSongs success with limit: {}", limit);
+        return result;
     }
 
     @Override

@@ -24,6 +24,22 @@ public class AnalyticsController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/most-played/today")
+    public ResponseEntity<List<String>> getTodayMostPlayedSongs(@RequestParam(defaultValue = "50") int limit) {
+        log.info("AnalyticsController::getTodayMostPlayedSongs called with limit: {}", limit);
+        List<String> result = analyticsService.getTodayMostPlayedSongs(limit);
+        log.info("AnalyticsController::getTodayMostPlayedSongs success with limit: {}", limit);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/trending")
+    public ResponseEntity<List<String>> getTrendingSongs(@RequestParam(defaultValue = "20") int limit) {
+        log.info("AnalyticsController::getTrendingSongs called with limit: {}", limit);
+        List<String> result = analyticsService.getTrendingSongs(limit);
+        log.info("AnalyticsController::getTrendingSongs success with limit: {}", limit);
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping("/record/{musicId}")
     ResponseEntity<Boolean> recordPlayEvent(@PathVariable String musicId) {
         log.info("AnalyticsController::recordPlayEvent called with musicId: {}", musicId);
