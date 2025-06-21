@@ -1,14 +1,13 @@
 package com.service.recommendation.features.controller;
 
+import com.service.recommendation.features.dto.AIRecommendationRequest;
+import com.service.recommendation.features.dto.AIRecommendationResponse;
 import com.service.recommendation.features.dto.RecommendationResponse;
 import com.service.recommendation.features.service.RecommendationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -20,10 +19,18 @@ public class RecommendationController {
 
     @GetMapping("/recommendations")
     public ResponseEntity<RecommendationResponse> getAllRecommendations() {
-        log.info("Fetching all recommendation categories");
+        log.info("RecommendationController::getAllRecommendations - Fetching all recommendation categories");
         RecommendationResponse response = recommendationService.getAllRecommendations();
-        log.info("Successfully compiled recommendations");
+        log.info("RecommendationController::getAllRecommendations - Successfully compiled recommendations: {}", response);
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/ai-recommendations")
+    public ResponseEntity<AIRecommendationResponse> getAIRecommendations(@RequestBody AIRecommendationRequest aiRecommendationRequest) {
+        log.info("RecommendationController::getAIRecommendations - Received request with prompt: {}, musicIds: {}",
+                aiRecommendationRequest.getPrompt(), aiRecommendationRequest.getMusicIds());
+        AIRecommendationResponse response = recommendationService.getAIRecommendations(aiRecommendationRequest);
+        log.info("RecommendationController::getAIRecommendations - Returning AI recommendations: {}", response);
+        return ResponseEntity.ok(response);
+    }
 }

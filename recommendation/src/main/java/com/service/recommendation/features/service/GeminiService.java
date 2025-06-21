@@ -3,9 +3,11 @@ package com.service.recommendation.features.service;
 import com.service.recommendation.features.dto.GeminiRequest;
 import com.service.recommendation.features.dto.GeminiResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+@Service
 public class GeminiService {
 
     @Value("${gemini.api.key}")
