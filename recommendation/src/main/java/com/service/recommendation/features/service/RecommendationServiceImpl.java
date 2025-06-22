@@ -78,6 +78,8 @@ public class RecommendationServiceImpl implements RecommendationService {
         return response;
     }
 
+    // TODO: AI returned valid-looking IDs, but the recommendedSongs list is empty.
+
     @Override
     public AIRecommendationResponse getAIRecommendations(AIRecommendationRequest aiRecommendationRequest) {
         log.info("RecommendationServiceImpl::getAIRecommendations - Prompt: {}, Music IDs: {}",
@@ -108,7 +110,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         promptBuilder.append("### Input Songs:\n");
         for (MusicDetailDto detail : inputMusicDetails) {
             promptBuilder.append(String.format("- ID: %s | Title: %s | Artist: %s | Genre: %s\n",
-                    detail.getId(), detail.getTitle(), detail.getArtistName(), detail.getGenre()));
+                    detail.getMusicId(), detail.getTitle(), detail.getArtistName(), detail.getTags()));
         }
 
         promptBuilder.append("\n### User's Prompt:\n").append(aiRecommendationRequest.getPrompt()).append("\n\n");
@@ -154,6 +156,25 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .aiResponse(aiResponse)
                 .recommendedSongs(recommendedSongs)
                 .build();
+    }
+
+    @Override
+    public List<MusicDetailDto> testFetchMusicDetails(List<String> musicIds) {
+        log.info("RecommendationServiceImpl::testFetchMusicDetails - Fetching music details for IDs: {}", musicIds);
+
+        return musicIds.stream()
+                .map(id -> {
+                    try {
+                        MusicDetailDto dto = recommendationServiceClient.fetchMusicDetailsFromMusicService(id);
+                        log.debug("Fetched music detail for ID {}: {}", id, dto);
+                        return dto;
+                    } catch (Exception e) {
+                        log.warn("Failed to fetch music detail for ID: {}", id, e);
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     private List<String> getSampleCatalogIds() {

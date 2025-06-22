@@ -72,7 +72,7 @@ public class RecommendationServiceClient {
     public MusicDetailDto fetchMusicDetailsFromMusicService(String musicId) {
         log.info("RecommendationServiceClient::Fetching music details for ID: {}", musicId);
         return webClient.get()
-                .uri(RecommendationUrlConfig.MUSIC_SERVICE_URL + "/get-music-details/{id}", musicId)
+                .uri(RecommendationUrlConfig.MUSIC_SERVICE_URL + "/music-basic-info/{id}", musicId)
                 .retrieve()
                 .bodyToMono(MusicDetailDto.class)
                 .block();

@@ -1,5 +1,6 @@
 package com.service.music.features.music.controller;
 
+import com.service.music.features.music.dto.MusicDetailDto;
 import com.service.music.features.music.dto.MusicDto;
 import com.service.music.features.music.dto.MusicSearchDto;
 import com.service.music.features.music.service.MusicService;
@@ -52,5 +53,13 @@ public class MusicController {
         log.info("MusicController::getFileUrl called for ID: {}", musicId);
         String fileUrl = musicService.getMusicFileUrlById(musicId);
         return ResponseEntity.ok(fileUrl);
+    }
+
+    @GetMapping("/music-basic-info/{musicId}")
+    public ResponseEntity<MusicDetailDto> getLightMusicDetails(@PathVariable String musicId) {
+        log.info("MusicController::getFlatMusicDetails called for ID: {}", musicId);
+        MusicDetailDto dto = musicService.getSimplifiedMusicDetails(musicId);
+        log.info("MusicController::getFlatMusicDetails returning DTO: {}", dto);
+        return ResponseEntity.ok(dto);
     }
 }

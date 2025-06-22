@@ -1,5 +1,6 @@
 package com.service.music.features.music.service;
 
+import com.service.music.features.music.dto.MusicDetailDto;
 import com.service.music.features.music.dto.MusicDto;
 import com.service.music.features.music.dto.MusicSearchDto;
 
@@ -16,5 +17,5 @@ public interface MusicService {
 
     //Dedicate for other microservices
     String getMusicFileUrlById(String musicId);
-
+    MusicDetailDto getSimplifiedMusicDetails(String musicId);
 }

@@ -2,9 +2,11 @@ package com.service.music.features.music.utility;
 
 import com.service.music.core.model.*;
 import com.service.music.features.music.dto.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
+@Slf4j
 public class MusicMapper {
 
     public static MusicModel mapMusicDetailsDtoToModel(MusicDto musicDto) {
@@ -93,5 +95,27 @@ public class MusicMapper {
                 .tags(model.getTags())
                 .albumName(model.getAlbum() != null ? model.getAlbum().getAlbumName() : null)
                 .build();
+    }
+
+    public static MusicDetailDto toSimplifiedDto(MusicModel musicModel) {
+        log.info("MusicMapper::toSimplifiedDto called with MusicModel ID: {}", musicModel != null ? musicModel.getId() : "null");
+        if (Objects.isNull(musicModel)) {
+            log.warn("MusicMapper::toSimplifiedDto received null MusicModel, returning null");
+            return null;
+        }
+        MusicDetailDto musicDetailDto = getMusicDetailDto(musicModel);
+        log.info("MusicMapper::toSimplifiedDto returning MusicDetailDto: {}", musicDetailDto);
+        return musicDetailDto;
+    }
+
+    private static MusicDetailDto getMusicDetailDto(MusicModel musicModel) {
+        MusicDetailDto musicDetailDto = new MusicDetailDto();
+        musicDetailDto.setMusicId(musicModel.getId());
+        musicDetailDto.setTitle(musicModel.getTitle());
+        musicDetailDto.setArtistName(musicModel.getArtist() != null ? musicModel.getArtist().getArtistName() : null);
+        musicDetailDto.setAlbumName(musicModel.getAlbum() != null ? musicModel.getAlbum().getAlbumName() : null);
+        musicDetailDto.setTags(musicModel.getTags());
+        musicDetailDto.setFileUrl(musicModel.getMediaDetails() != null ? musicModel.getMediaDetails().getFileUrl() : null);
+        return musicDetailDto;
     }
 }

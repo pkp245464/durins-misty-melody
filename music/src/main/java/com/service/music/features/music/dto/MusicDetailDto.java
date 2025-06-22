@@ -1,10 +1,12 @@
-package com.service.recommendation.features.dto;
+package com.service.music.features.music.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class MusicDetailDto {
     private String musicId;
     private String title;

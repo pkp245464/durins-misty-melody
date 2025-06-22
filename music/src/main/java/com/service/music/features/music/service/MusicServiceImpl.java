@@ -2,6 +2,7 @@ package com.service.music.features.music.service;
 
 import com.service.music.core.config.MusicUrlConfig;
 import com.service.music.core.exceptions.GlobalDurinMusicServiceException;
+import com.service.music.features.music.dto.MusicDetailDto;
 import com.service.music.core.model.MusicModel;
 import com.service.music.features.music.dto.MusicDto;
 import com.service.music.features.music.dto.MusicSearchDto;
@@ -109,4 +110,16 @@ public class MusicServiceImpl implements MusicService {
                 .orElseThrow(() -> new GlobalDurinMusicServiceException("Music with ID " + musicId + " does not exist."));
         return musicModel.getMediaDetails().getFileUrl();
     }
+
+    @Override
+    public MusicDetailDto getSimplifiedMusicDetails(String musicId) {
+        log.info("MusicServiceImpl::getSimplifiedMusicDetails called for ID: {}", musicId);
+
+        MusicModel musicModel = musicRepository.findById(musicId)
+                .orElseThrow(() -> new GlobalDurinMusicServiceException("MusicServiceImpl::getSimplifiedMusicDetails, Music not found with ID: " + musicId));
+        MusicDetailDto musicDetailDto = MusicMapper.toSimplifiedDto(musicModel);
+        log.info("MusicServiceImpl::getSimplifiedMusicDetails returning DTO: {}", musicDetailDto);
+        return MusicMapper.toSimplifiedDto(musicModel);
+    }
+
 }

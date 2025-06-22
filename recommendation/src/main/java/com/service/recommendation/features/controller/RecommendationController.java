@@ -2,12 +2,15 @@ package com.service.recommendation.features.controller;
 
 import com.service.recommendation.features.dto.AIRecommendationRequest;
 import com.service.recommendation.features.dto.AIRecommendationResponse;
+import com.service.recommendation.features.dto.MusicDetailDto;
 import com.service.recommendation.features.dto.RecommendationResponse;
 import com.service.recommendation.features.service.RecommendationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -33,4 +36,13 @@ public class RecommendationController {
         log.info("RecommendationController::getAIRecommendations - Returning AI recommendations: {}", response);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/test-music-details")
+    public ResponseEntity<List<MusicDetailDto>> testFetchMusicDetails(@RequestBody List<String> musicIds) {
+        log.info("RecommendationController::testFetchMusicDetails - Received request for music IDs: {}", musicIds);
+        List<MusicDetailDto> musicDetails = recommendationService.testFetchMusicDetails(musicIds);
+        log.info("RecommendationController::testFetchMusicDetails - Retrieved {} music details", musicDetails.size());
+        return ResponseEntity.ok(musicDetails);
+    }
+
 }
