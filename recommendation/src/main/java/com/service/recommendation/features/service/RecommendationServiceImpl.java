@@ -158,25 +158,6 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .build();
     }
 
-    @Override
-    public List<MusicDetailDto> testFetchMusicDetails(List<String> musicIds) {
-        log.info("RecommendationServiceImpl::testFetchMusicDetails - Fetching music details for IDs: {}", musicIds);
-
-        return musicIds.stream()
-                .map(id -> {
-                    try {
-                        MusicDetailDto dto = recommendationServiceClient.fetchMusicDetailsFromMusicService(id);
-                        log.debug("Fetched music detail for ID {}: {}", id, dto);
-                        return dto;
-                    } catch (Exception e) {
-                        log.warn("Failed to fetch music detail for ID: {}", id, e);
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .toList();
-    }
-
     private List<String> getSampleCatalogIds() {
         List<String> ids = new ArrayList<>();
         ids.addAll(safeFetch(() -> recommendationServiceClient.fetchTrendingSongsFromAnalyticsService(40), "trending"));

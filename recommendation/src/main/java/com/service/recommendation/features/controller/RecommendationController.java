@@ -36,13 +36,4 @@ public class RecommendationController {
         log.info("RecommendationController::getAIRecommendations - Returning AI recommendations: {}", response);
         return ResponseEntity.ok(response);
     }
-
-    @PostMapping("/test-music-details")
-    public ResponseEntity<List<MusicDetailDto>> testFetchMusicDetails(@RequestBody List<String> musicIds) {
-        log.info("RecommendationController::testFetchMusicDetails - Received request for music IDs: {}", musicIds);
-        List<MusicDetailDto> musicDetails = recommendationService.testFetchMusicDetails(musicIds);
-        log.info("RecommendationController::testFetchMusicDetails - Retrieved {} music details", musicDetails.size());
-        return ResponseEntity.ok(musicDetails);
-    }
-
 }

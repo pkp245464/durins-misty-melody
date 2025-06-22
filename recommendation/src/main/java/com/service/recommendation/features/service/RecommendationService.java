@@ -10,8 +10,4 @@ import java.util.List;
 public interface RecommendationService {
     RecommendationResponse getAllRecommendations();
     AIRecommendationResponse getAIRecommendations(AIRecommendationRequest aiRecommendationRequest);
-
-    // for testing purpose
-    List<MusicDetailDto> testFetchMusicDetails(List<String> musicIds);
-
 }
